@@ -696,7 +696,7 @@ public class IRCApplication extends IRCObject implements ServerListener,ServerMa
   {
     System.out.println("Usage :");
     System.out.println("   java irc.IRCApplication -f configfile");
-    System.out.println("or java irc.IRCApplication -p nick fullname host gui");
+    System.out.println("or java irc.IRCApplication -p nick fullname host port gui [-ssl]");
     System.out.println("");
     System.out.println("Without any parameter, '-f pjirc.cfg' parameters are assumed.");
   }
@@ -723,13 +723,19 @@ public class IRCApplication extends IRCObject implements ServerListener,ServerMa
         ircConfiguration=loader.loadIRCConfiguration();
         startupConfiguration=loader.loadStartupConfiguration();
       }
-      else if((args.length>=5) && (args[0].equals("-p")))
+      else if((args.length>=6) && (args[0].equals("-p")))
       {
         StreamParameterProvider provider=new StreamParameterProvider(null);
         ConfigurationLoader loader=new ConfigurationLoader(provider,new NullURLHandler(),new AWTImageLoader(),new NullSoundHandler(),file);
         ircConfiguration=loader.loadIRCConfiguration();
-        ircConfiguration.set("gui",args[4]);
-        startupConfiguration=new StartupConfiguration(args[1],"",args[2],new String[] {""},new String[] {args[3]},new int[] {6667},"",new String[] {},new String[] {});
+        ircConfiguration.set("gui",args[5]);
+        int port=new Integer(args[4]).intValue();
+        // Check for -ssl flag
+        if(args.length>=7 && args[6].equals("-ssl"))
+        {
+          irc.security.DefaultSecuredProvider.useTLS=true;
+        }
+        startupConfiguration=new StartupConfiguration(args[1],"",args[2],new String[] {""},new String[] {args[3]},new int[] {port},"",new String[] {},new String[] {});
       }
       else
       {

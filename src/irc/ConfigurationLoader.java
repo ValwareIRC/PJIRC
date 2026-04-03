@@ -310,6 +310,12 @@ public class ConfigurationLoader
     config.set("disablequeries",getBoolean("disablequeries",false));
     config.set("autorejoin",getBoolean("autorejoin",false));
     
+    // Enable TLS if ssl=true in config
+    if(getBoolean("ssl",false))
+    {
+      irc.security.DefaultSecuredProvider.useTLS=true;
+    }
+
     config.setInitialisation(getArray("init"));
     
     readBackgroundConfig(config);

@@ -85,6 +85,14 @@ public class IRCApplet extends java.applet.Applet implements ParameterProvider
         System.out.println("PJIRC: WebSocket transport enabled");
       }
 
+      // Enable TLS/SSL if configured
+      String ssl=getParameter("ssl");
+      if(ssl!=null && (ssl.equals("true") || ssl.equals("1") || ssl.equals("yes")))
+      {
+        DefaultSecuredProvider.useTLS=true;
+        System.out.println("PJIRC: TLS/SSL enabled");
+      }
+
       ParameterProvider provider=this;
 
       String useFileParameter=getParameter("fileparameter");

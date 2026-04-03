@@ -32,6 +32,7 @@ package irc.security;
 import java.io.*;
 import java.net.*;
 import java.awt.*;
+import javax.net.ssl.SSLSocketFactory;
 import irc.WebSocketSocket;
 
 /**
@@ -45,10 +46,19 @@ public class DefaultSecuredProvider implements SecuredProvider
    */
   public static boolean useWebSocket = false;
 
+  /**
+   * When true, getSocket() wraps the connection in TLS/SSL.
+   */
+  public static boolean useTLS = false;
+
   public Socket getSocket(String host,Integer port) throws UnknownHostException,IOException
   {
     if (useWebSocket) {
       return new WebSocketSocket(host, port.intValue());
+    }
+    if (useTLS) {
+      SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+      return factory.createSocket(host, port.intValue());
     }
     return new Socket(host,port.intValue());
   }
