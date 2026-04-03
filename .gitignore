@@ -1,0 +1,18 @@
+# Build output
+build/
+*.class
+
+# IDE
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp/download artifacts
+*.zip
