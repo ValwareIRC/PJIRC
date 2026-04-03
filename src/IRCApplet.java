@@ -28,6 +28,7 @@
 /*****************************************************/
 
 import irc.*;
+import irc.security.DefaultSecuredProvider;
 import java.awt.*;
 
 /**
@@ -76,6 +77,14 @@ public class IRCApplet extends java.applet.Applet implements ParameterProvider
   {
     try
     {
+      // Enable WebSocket transport if configured (for browser-based usage)
+      String ws=getParameter("websocket");
+      if(ws!=null && (ws.equals("true") || ws.equals("1") || ws.equals("yes")))
+      {
+        DefaultSecuredProvider.useWebSocket=true;
+        System.out.println("PJIRC: WebSocket transport enabled");
+      }
+
       ParameterProvider provider=this;
 
       String useFileParameter=getParameter("fileparameter");

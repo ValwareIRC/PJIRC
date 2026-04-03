@@ -32,15 +32,24 @@ package irc.security;
 import java.io.*;
 import java.net.*;
 import java.awt.*;
+import irc.WebSocketSocket;
 
 /**
  * Default secured provider.
  */
 public class DefaultSecuredProvider implements SecuredProvider
 {
+  /**
+   * When true, getSocket() returns a WebSocket-backed socket
+   * for browser-based usage via CheerpJ.
+   */
+  public static boolean useWebSocket = false;
 
   public Socket getSocket(String host,Integer port) throws UnknownHostException,IOException
   {
+    if (useWebSocket) {
+      return new WebSocketSocket(host, port.intValue());
+    }
     return new Socket(host,port.intValue());
   }
 

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PJIRC Web Chat</title>
+  <script src="https://cjrtnc.leaningtech.com/4.2/loader.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: sans-serif;
+      color: #eee;
+    }
+    h1 {
+      margin-bottom: 10px;
+      font-size: 1.4em;
+    }
+    .chat-container {
+      border: 1px solid #444;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    #status {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <h1>PJIRC &mdash; Plouf's Java IRC Client</h1>
+  <div class="chat-container">
+    <applet
+      archive="pjirc.jar"
+      code="IRCApplet"
+      width="900"
+      height="600">
+      <param name="nick" value="PJIRCWebUser">
+      <param name="fullname" value="PJIRC Web User">
+      <param name="host" value="irc.unrealircd.org">
+      <param name="port" value="443">
+      <param name="gui" value="pixx">
+      <param name="language" value="english">
+      <param name="websocket" value="true">
+      <param name="autoconnection" value="true">
+    </applet>
+  </div>
+  <div id="status">Loading CheerpJ...</div>
+  <script>
+    // WebSocket state per connection ID
+    const wsState = {};
+
+    cheerpjInit({
+      enableDebug: true,
+      natives: {
+
+        // WebSocketSocket.nativeConnect(int wsId, String host, int port)
+        // Returns null on success, "ERROR:msg" on failure
+        async Java_irc_WebSocketSocket_nativeConnect(lib, wsId, host, port) {
+          const url = "wss://" + host + ":" + port;
+          console.log("[WS] Connecting to " + url + " (id=" + wsId + ")");
+          document.getElementById("status").textContent = "Connecting to " + url + "...";
+
+          return new Promise((resolve) => {
+            let resolved = false;
+            try {
+              const ws = new WebSocket(url);
+              const state = {
+                ws: ws,
+                recvQueue: [],       // buffered received messages
+                readResolve: null,   // pending nativeRead resolver
+                closed: false
+              };
+              wsState[wsId] = state;
+
+              ws.onopen = function() {
+                console.log("[WS] Connected (id=" + wsId + ")");
+                document.getElementById("status").textContent = "Connected to " + host;
+                if (!resolved) { resolved = true; resolve(null); }
+              };
+
+              ws.onmessage = function(event) {
+                const data = typeof event.data === "string" ? event.data : "";
+                console.log("[WS] RX: " + data.substring(0, 200));
+                if (state.readResolve) {
+                  const r = state.readResolve;
+                  state.readResolve = null;
+                  r(data);
+                } else {
+                  state.recvQueue.push(data);
+                }
+              };
+
+              ws.onclose = function(event) {
+                console.log("[WS] Closed (id=" + wsId + ") code=" + event.code);
+                document.getElementById("status").textContent = "Disconnected (code " + event.code + ")";
+                state.closed = true;
+                if (!resolved) { resolved = true; resolve("ERROR:Connection closed (code " + event.code + ")"); }
+                if (state.readResolve) {
+                  const r = state.readResolve;
+                  state.readResolve = null;
+                  r(null);
+                }
+              };
+
+              ws.onerror = function(event) {
+                console.error("[WS] Error (id=" + wsId + ")");
+                document.getElementById("status").textContent = "WebSocket error";
+                state.closed = true;
+                if (!resolved) { resolved = true; resolve("ERROR:WebSocket connection failed to " + host + ":" + port); }
+                if (state.readResolve) {
+                  const r = state.readResolve;
+                  state.readResolve = null;
+                  r(null);
+                }
+              };
+            } catch(e) {
+              console.error("[WS] Exception: " + e);
+              if (!resolved) { resolved = true; resolve("ERROR:" + e.toString()); }
+            }
+          });
+        },
+
+        // WebSocketSocket.nativeRead(int wsId)
+        // Returns next message string, or null on close/EOF
+        async Java_irc_WebSocketSocket_nativeRead(lib, wsId) {
+          const state = wsState[wsId];
+          if (!state) return null;
+
+          // If there's buffered data, return immediately
+          if (state.recvQueue.length > 0) {
+            return state.recvQueue.shift();
+          }
+
+          // If already closed, return null (EOF)
+          if (state.closed) {
+            return null;
+          }
+
+          // Block (as async Promise) until data arrives
+          return new Promise((resolve) => {
+            state.readResolve = resolve;
+          });
+        },
+
+        // WebSocketSocket.nativeSend(int wsId, String data)
+        async Java_irc_WebSocketSocket_nativeSend(lib, wsId, data) {
+          const state = wsState[wsId];
+          if (state && state.ws && state.ws.readyState === WebSocket.OPEN) {
+            console.log("[WS] TX: " + data.substring(0, 200));
+            state.ws.send(data);
+          }
+        },
+
+        // WebSocketSocket.nativeClose(int wsId)
+        async Java_irc_WebSocketSocket_nativeClose(lib, wsId) {
+          const state = wsState[wsId];
+          if (state && state.ws) {
+            state.ws.close();
+            state.closed = true;
+            delete wsState[wsId];
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

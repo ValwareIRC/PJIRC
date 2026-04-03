@@ -41,36 +41,51 @@ java -jar pjirc.jar -p <nick> <fullname> <server> <gui>
 - **pgl** — PGL-based theme
 - **sdk** — Minimal SDK theme
 
-## Web Browser Usage (Historical)
+## Web Browser Usage
 
-PJIRC was originally designed as a **Java applet** embedded in web pages — the classic way to offer IRC chat directly on a website during the 2000s. The applet had full TCP socket access through the browser's Java plugin, allowing it to connect to IRC servers directly.
+PJIRC was originally a Java applet for embedding IRC in web pages. While browser Java plugin support is long dead, PJIRC can now run in modern browsers using [CheerpJ](https://cheerpj.com/) (a WebAssembly-based JVM) with **WebSocket transport** to connect to IRC servers that support WebSocket (e.g. UnrealIRCd, InspIRCd with websocket module).
 
-### Why it no longer works in browsers
+### Quick Start
 
-**Modern browsers cannot run PJIRC as a web client.** There are two compounding issues:
+1. Build PJIRC: `./build.sh`
+2. Serve the `run/` directory via any HTTP server:
+   ```bash
+   cd run && python3 -m http.server 8090
+   ```
+3. Open `http://localhost:8090/chat.html` in a browser
 
-1. **Java plugin support is gone.** All major browsers removed NPAPI/Java plugin support (Chrome in 2015, Firefox in 2017). The `<applet>` tag is dead.
+### How it works
 
-2. **Browsers block raw TCP sockets.** Even with WebAssembly-based Java runtimes like [CheerpJ](https://cheerpj.com/), IRC won't work because browsers only allow HTTP/HTTPS/WebSocket connections — not raw TCP to `irc.example.com:6667`. You'll get `java.net.UnknownHostException`. CheerpJ's own docs confirm that anything beyond same-origin HTTP requires a Tailscale VPN proxy layer.
+- **CheerpJ 4.2** runs the PJIRC Java applet inside the browser
+- The `websocket=true` applet parameter activates WebSocket transport
+- Instead of raw TCP sockets (blocked by browsers), PJIRC connects via `wss://` to the IRC server
+- JavaScript native method implementations bridge browser's `WebSocket` API into Java's `InputStream`/`OutputStream`
 
-### If you need web-based IRC
+### Configuring the applet
 
-For modern web IRC, consider purpose-built clients like [Kiwi IRC](https://kiwiirc.com/) or [The Lounge](https://thelounge.chat/), which use WebSocket gateways to bridge browser connections to IRC servers.
-
-### Legacy Applet Tag (historical reference)
-
-For archival reference, PJIRC was originally embedded in web pages like this:
+Edit `chat.html` to change the server, nickname, and other settings via `<param>` tags:
 
 ```html
-<applet code="IRCApplet" archive="pjirc.jar" width="800" height="600">
-  <param name="nick" value="WebUser">
-  <param name="fullname" value="PJIRC User">
-  <param name="host" value="irc.example.com">
-  <param name="port" value="6667">
+<applet archive="pjirc.jar" code="IRCApplet" width="900" height="600">
+  <param name="nick" value="PJIRCWebUser">
+  <param name="host" value="irc.unrealircd.org">
+  <param name="port" value="443">
   <param name="gui" value="pixx">
   <param name="language" value="english">
+  <param name="websocket" value="true">
 </applet>
 ```
+
+The `websocket` parameter is the key addition — it tells PJIRC to use `wss://` WebSocket connections instead of raw TCP.
+
+### Requirements
+
+- The IRC server **must** support WebSocket connections (e.g. UnrealIRCd with `listen` block for websocket on the target port)
+- The server's TLS certificate must be valid (browsers enforce this for `wss://`)
+
+### Legacy applet mode
+
+For archival reference, the original raw-TCP applet mode no longer works in any modern browser. The `websocket=true` parameter is what makes PJIRC viable as a web client again.
 
 ### Applet Parameters
 
@@ -84,6 +99,7 @@ All configuration options from `pjirc.cfg` can also be passed as applet `<param>
 | `port`                         | IRC server port (default: 6667)              |
 | `gui`                          | GUI theme: `pixx`, `pgl`, or `sdk`           |
 | `language`                     | Language file name (without `.lng`)           |
+| `websocket`                    | Use WebSocket transport (`true`/`false`)     |
 | `command1`, `command2`, ...    | Auto-run commands (e.g. `/join #channel`)    |
 | `style:backgroundcolor`       | Background color (integer RGB)               |
 | `style:foregroundcolor`        | Text color (integer RGB)                     |
@@ -117,6 +133,7 @@ See `run/pjirc.cfg` for available options. Key settings:
 src/              Java source (package root)
   IRCApplet.java  Applet entry point
   irc/            Core IRC engine
+    WebSocketSocket.java  WebSocket transport for browser mode
     gui/pixx/     Pixx GUI theme
     gui/pgl/      PGL GUI theme  
     gui/sdk/      SDK GUI theme
@@ -126,6 +143,7 @@ src/              Java source (package root)
 run/              Runtime directory
   pjirc.jar       Built application
   pjirc.cfg       Configuration file
+  chat.html       Browser-based client (CheerpJ + WebSocket)
   english.lng     English language strings
 build.sh          Build script
 ```
