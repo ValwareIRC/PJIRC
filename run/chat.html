@@ -85,8 +85,15 @@
               };
 
               ws.onmessage = function(event) {
-                const data = typeof event.data === "string" ? event.data : "";
+                let data = typeof event.data === "string" ? event.data : "";
                 console.log("[WS] RX: " + data.substring(0, 200));
+                // IRC over WebSocket may or may not include \r\n line endings.
+                // CodingHandler.readUTF() reads byte-by-byte looking for \r or \n
+                // to delimit lines, so we must ensure each message ends with \r\n.
+                if (!data.endsWith("\r\n")) {
+                  // Strip any partial line ending then add canonical \r\n
+                  data = data.replace(/\r?\n?$/, "") + "\r\n";
+                }
                 if (state.readResolve) {
                   const r = state.readResolve;
                   state.readResolve = null;
