@@ -41,51 +41,25 @@ java -jar pjirc.jar -p <nick> <fullname> <server> <gui>
 - **pgl** — PGL-based theme
 - **sdk** — Minimal SDK theme
 
-## Running in a Web Browser
+## Web Browser Usage (Historical)
 
-PJIRC was originally designed as a **Java applet** embedded in web pages — the classic way to offer IRC chat directly on a website. Modern browsers no longer support Java applets (NPAPI plugin support was removed from Chrome in 2015 and Firefox in 2017), but you can still run PJIRC in the browser using [CheerpJ](https://cheerpj.com/), a WebAssembly-based JVM that requires no plugins or client-side Java installation.
+PJIRC was originally designed as a **Java applet** embedded in web pages — the classic way to offer IRC chat directly on a website during the 2000s. The applet had full TCP socket access through the browser's Java plugin, allowing it to connect to IRC servers directly.
 
-### Using CheerpJ
+### Why it no longer works in browsers
 
-1. Place `pjirc.jar` and your language files (`english.lng`, `pixx-english.lng`, etc.) in a directory served by a web server.
+**Modern browsers cannot run PJIRC as a web client.** There are two compounding issues:
 
-2. Create an HTML page like this:
+1. **Java plugin support is gone.** All major browsers removed NPAPI/Java plugin support (Chrome in 2015, Firefox in 2017). The `<applet>` tag is dead.
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <title>PJIRC Web Chat</title>
-  <script src="https://cjrtnc.leaningtech.com/4.0/cj3loader.js"></script>
-</head>
-<body>
-  <cheerpj-applet
-    archive="pjirc.jar"
-    code="IRCApplet"
-    width="800"
-    height="600"
-    param_nick="WebUser"
-    param_fullname="PJIRC Web User"
-    param_host="irc.libera.chat"
-    param_port="6667"
-    param_gui="pixx"
-    param_language="english">
-  </cheerpj-applet>
-</body>
-</html>
-```
+2. **Browsers block raw TCP sockets.** Even with WebAssembly-based Java runtimes like [CheerpJ](https://cheerpj.com/), IRC won't work because browsers only allow HTTP/HTTPS/WebSocket connections — not raw TCP to `irc.example.com:6667`. You'll get `java.net.UnknownHostException`. CheerpJ's own docs confirm that anything beyond same-origin HTTP requires a Tailscale VPN proxy layer.
 
-3. Serve the directory over HTTP(S). For quick local testing:
+### If you need web-based IRC
 
-```bash
-cd run
-python3 -m http.server 8080
-# Then open http://localhost:8080/chat.html
-```
+For modern web IRC, consider purpose-built clients like [Kiwi IRC](https://kiwiirc.com/) or [The Lounge](https://thelounge.chat/), which use WebSocket gateways to bridge browser connections to IRC servers.
 
-### Traditional Applet Tag (legacy reference)
+### Legacy Applet Tag (historical reference)
 
-For historical reference, PJIRC was originally embedded using:
+For archival reference, PJIRC was originally embedded in web pages like this:
 
 ```html
 <applet code="IRCApplet" archive="pjirc.jar" width="800" height="600">
@@ -98,27 +72,25 @@ For historical reference, PJIRC was originally embedded using:
 </applet>
 ```
 
-> **Note:** This only works in very old browsers with Java plugin support. Use CheerpJ for modern browsers.
-
 ### Applet Parameters
 
-All configuration options from `pjirc.cfg` can be passed as applet `<param>` tags (or `param_` attributes with CheerpJ). Key parameters:
+All configuration options from `pjirc.cfg` can also be passed as applet `<param>` tags:
 
-| Parameter | Description |
-|-----------|-------------|
-| `nick` | IRC nickname |
-| `fullname` | Full name / real name |
-| `host` | IRC server hostname |
-| `port` | IRC server port (default: 6667) |
-| `gui` | GUI theme: `pixx`, `pgl`, or `sdk` |
-| `language` | Language file name (without `.lng`) |
-| `command1`, `command2`, ... | Auto-run commands (e.g. `/join #channel`) |
-| `style:backgroundcolor` | Background color (integer RGB) |
-| `style:foregroundcolor` | Text color (integer RGB) |
+| Parameter                      | Description                                  |
+| ------------------------------ | -------------------------------------------- |
+| `nick`                         | IRC nickname                                 |
+| `fullname`                     | Full name / real name                        |
+| `host`                         | IRC server hostname                          |
+| `port`                         | IRC server port (default: 6667)              |
+| `gui`                          | GUI theme: `pixx`, `pgl`, or `sdk`           |
+| `language`                     | Language file name (without `.lng`)           |
+| `command1`, `command2`, ...    | Auto-run commands (e.g. `/join #channel`)    |
+| `style:backgroundcolor`       | Background color (integer RGB)               |
+| `style:foregroundcolor`        | Text color (integer RGB)                     |
 
 ### JavaScript API
 
-When running as an applet, PJIRC exposes methods callable from JavaScript:
+When running as an applet (in legacy browsers), PJIRC exposes methods callable from JavaScript:
 
 - `sendString(text)` — Send text to the current channel/query
 - `sendString(server, type, name, cmd)` — Send command to a specific source
