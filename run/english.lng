@@ -66,6 +66,7 @@
 0404 [ABOUT_THANKS] Thanks to
 0405 [ABOUT_SUPPORT] for support, ideas and testing
 0406 [ABOUT_GPL] This software is licensed under the GPL license
+0407 [ABOUT_REVIVED_BY] Revived by
       
 0501 [SERVER_UNABLE_TO_CONNECT] Unable to connect : %1
 0502 [SERVER_UNABLE_TO_CONNECT_STILL] Unable to connect to %1 : currently trying to connect to %2

@@ -22,41 +22,41 @@
 
 0001 [INTERPRETOR_NOT_ON_CHANNEL] Pas sur un canal
 0002 [INTERPRETOR_UNKNOWN_DCC] %1 : sous-commande dcc inconnue
-0003 [INTERPRETOR_INSUFFICIENT_PARAMETERS] %1 : paramètres insuffisants
+0003 [INTERPRETOR_INSUFFICIENT_PARAMETERS] %1 : paramï¿½tres insuffisants
 0004 [INTERPRETOR_BAD_CONTEXT] Impossible d'effectuer %1 ici
 0005 [INTERPRETOR_CANNOT_CTCP_IN_DCCCHAT] Impossible d'envoyer des codes CTCP dans un DCC Chat
 0006 [INTERPRETOR_UNKNOWN_CONFIG] %1 : sous-commande de configuration inconnue
-0007 [INTERPRETOR_TIMESTAMP_ON] Horodateur activé
-0008 [INTERPRETOR_TIMESTAMP_OFF] Horodateur désactivé
-0009 [INTERPRETOR_SMILEYS_ON] Emoticons activés
-000a [INTERPRETOR_SMILEYS_OFF] Emoticons désactivés
-000b [INTERPRETOR_IGNORE_ON] Ignore à présent %1
+0007 [INTERPRETOR_TIMESTAMP_ON] Horodateur activï¿½
+0008 [INTERPRETOR_TIMESTAMP_OFF] Horodateur dï¿½sactivï¿½
+0009 [INTERPRETOR_SMILEYS_ON] Emoticons activï¿½s
+000a [INTERPRETOR_SMILEYS_OFF] Emoticons dï¿½sactivï¿½s
+000b [INTERPRETOR_IGNORE_ON] Ignore ï¿½ prï¿½sent %1
 000c [INTERPRETOR_IGNORE_OFF] N'ignore plus %1
-000d [INTERPRETOR_MULTISERVER_DISABLED] Le support multiserveur est désactivé
+000d [INTERPRETOR_MULTISERVER_DISABLED] Le support multiserveur est dï¿½sactivï¿½
   
 0101 [DCC_WAITING_INCOMING] Attente de connexion...
 0102 [DCC_UNABLE_TO_OPEN_CONNECTION] Impssible d'ouvrir la connexion : %1
-0103 [DCC_CONNECTION_ESTABLISHED] "Connexion DCC établie
-0104 [DCC_CONNECTION_CLOSED] Connexion fermée
+0103 [DCC_CONNECTION_ESTABLISHED] "Connexion DCC ï¿½tablie
+0104 [DCC_CONNECTION_CLOSED] Connexion fermï¿½e
 0105 [DCC_ERROR] Erreur : %1
-0106 [DCC_UNABLE_TO_SEND_TO] %1 : impossible d'envoyer à %2
-0107 [DCC_BAD_CONTEXT] Impossible d'exécuter la commande dans le contexte actuel
-0108 [DCC_NOT_CONNECTED] Non connecté
+0106 [DCC_UNABLE_TO_SEND_TO] %1 : impossible d'envoyer ï¿½ %2
+0107 [DCC_BAD_CONTEXT] Impossible d'exï¿½cuter la commande dans le contexte actuel
+0108 [DCC_NOT_CONNECTED] Non connectï¿½
 0109 [DCC_UNABLE_PASSIVE_MODE] Impossible d'initialiser le mode passif
 010a [CTCP_PING_REPLY] [%1 PING reply] : %2 secondes
-010b [DCC_STREAM_CLOSED] Stream fermé
+010b [DCC_STREAM_CLOSED] Stream fermï¿½
       
 0201 [IDENT_FAILED_LAUNCH] Impossible de lancer le serveur IDENT : %1
-0202 [IDENT_REQUEST] Requête ident de %1
+0202 [IDENT_REQUEST] Requï¿½te ident de %1
 0203 [IDENT_ERROR] Erreur survenue
-0204 [IDENT_REPLIED] Répondu %1
-0205 [IDENT_DEFAULT_USER] utilisateur par défaut
-0206 [IDENT_NO_USER] Aucun utilisateur pour la reqûete
-0207 [IDENT_RUNNING_ON_PORT] Le serveur Ident s'exécute sur le port %1
+0204 [IDENT_REPLIED] Rï¿½pondu %1
+0205 [IDENT_DEFAULT_USER] utilisateur par dï¿½faut
+0206 [IDENT_NO_USER] Aucun utilisateur pour la reqï¿½ete
+0207 [IDENT_RUNNING_ON_PORT] Le serveur Ident s'exï¿½cute sur le port %1
 0208 [IDENT_LEAVING] Le serveur Ident se termine : %1
 0209 [IDENT_NONE] aucun
 020a [IDENT_UNKNOWN] inconnu
-020b [IDENT_UNDEFINED] Résultat indéterminé
+020b [IDENT_UNDEFINED] Rï¿½sultat indï¿½terminï¿½
       
 0301 [FILE_SAVEAS] Sauver le fichier sous
       
@@ -64,16 +64,17 @@
 0402 [ABOUT_PROGRAMMING] Programmation
 0403 [ABOUT_DESIGN] Design
 0404 [ABOUT_THANKS] Remerciements
-0405 [ABOUT_SUPPORT] pour leur support, leurs idées et les tests
+0405 [ABOUT_SUPPORT] pour leur support, leurs idï¿½es et les tests
 0406 [ABOUT_GPL] Ce programme est sous license GPL
+0407 [ABOUT_REVIVED_BY] RelancÃ© par
       
 0501 [SERVER_UNABLE_TO_CONNECT] Impossible de se connecter : %1
-0502 [SERVER_UNABLE_TO_CONNECT_STILL] Impossible de se connecter à %1, déjà en train d'essayer de se connecter à %2
-0503 [SERVER_DISCONNECTING] Déconnexion de %1
+0502 [SERVER_UNABLE_TO_CONNECT_STILL] Impossible de se connecter ï¿½ %1, dï¿½jï¿½ en train d'essayer de se connecter ï¿½ %2
+0503 [SERVER_DISCONNECTING] Dï¿½connexion de %1
 0504 [SERVER_CONNECTING] Connexion...
-0505 [SERVER_NOT_CONNECTED] Non connecté
+0505 [SERVER_NOT_CONNECTED] Non connectï¿½
 0506 [SERVER_LOGIN] Enregistrement...
-0507 [SERVER_DISCONNECTED] Déconnecté de %1
+0507 [SERVER_DISCONNECTED] Dï¿½connectï¿½ de %1
 0508 [SERVER_ERROR] Erreur : %1
 0509 [SERVER_AUTOREJOIN_ATTEMPT] Tentative de retour sur le canal %1...
 050a [SERVER_AUTOREJOIN_FAILED] Impossible de rejoindre le canal %1
@@ -83,11 +84,11 @@
 071c [GUI_DCC_CHAT_WARNING_TITLE] Attention
 071d [GUI_DCC_CHAT_WARNING_TEXT] Voulez-vous accepter une connection DCC-chat en provenance de %1?
 
-0801 [ASL_MALE] Garçon, %1 ans, %2
+0801 [ASL_MALE] Garï¿½on, %1 ans, %2
 0802 [ASL_FEMALE] Fille, %1 ans, %2
 0803 [ASL_UNKNOWN] %1 ans de %2
 
 0901 [REPLY_IDLE] %1 est inactif depuis %2
-0902 [REPLY_SIGNON] %1 s'est connecté(e) le %2
+0902 [REPLY_SIGNON] %1 s'est connectï¿½(e) le %2
 
-ffff [ERROR_NOT_DEFINED] Texte non défini
+ffff [ERROR_NOT_DEFINED] Texte non dï¿½fini

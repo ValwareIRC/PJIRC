@@ -65,13 +65,14 @@ public class AboutDialog extends WindowAdapter
 
     Panel text=new Panel();
 
-    text.setLayout(new GridLayout(20,1));
+    text.setLayout(new GridLayout(22,1));
     text.add(createLabel("PJIRC v"+config.getVersion()));
     text.add(new Panel());
     text.add(createLabel(config.getText(IRCTextProvider.ABOUT_GPL)));
     text.add(new Panel());
     text.add(createLabel(config.getText(IRCTextProvider.ABOUT_PROGRAMMING)+" : Philippe Detournay alias Plouf (theplouf@yahoo.com)"));
     text.add(createLabel(config.getText(IRCTextProvider.ABOUT_DESIGN)+" : Raphael Seegmuller chez pixxservices.com (pixxservices@pixxservices.com)"));
+    text.add(createLabel(config.getText(IRCTextProvider.ABOUT_REVIVED_BY)+" : Valware (github.com/ValwareIRC)"));
     text.add(new Panel());
     text.add(createLabel(config.getText(IRCTextProvider.ABOUT_THANKS)));
     text.add(new Panel());
@@ -86,10 +87,11 @@ public class AboutDialog extends WindowAdapter
     text.add(new Panel());
     text.add(createLabel("http://www.pjirc.com"));
     text.add(createLabel("http://www.pjirc.it"));
+    text.add(createLabel("https://github.com/ValwareIRC/PJIRC"));
     _aboutFrame.addWindowListener(this);
     _aboutFrame.add(text,BorderLayout.CENTER);
 
-    _aboutFrame.setSize(500,300);
+    _aboutFrame.setSize(500,340);
     _aboutFrame.setResizable(false);
     _aboutFrame.show();
   }
