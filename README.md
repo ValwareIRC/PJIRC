@@ -27,7 +27,7 @@ JDK 23 removed `java.applet` ([JEP 471](https://openjdk.org/jeps/471)). The buil
 ## Running
 
 ```bash
-chmod +x pjirc.sh
+chmod +x build.sh
 ./pjirc.sh -n Nick123 -s irc.libera.chat -p 6697 -t
 ```
 
