@@ -34,21 +34,8 @@
 </head>
 <body>
   <h1>PJIRC &mdash; Plouf's Java IRC Client</h1>
-  <div class="chat-container">
-    <applet
-      archive="pjirc.jar"
-      code="IRCApplet"
-      width="900"
-      height="600">
-      <param name="nick" value="PJIRCWebUser">
-      <param name="fullname" value="PJIRC Web User">
-      <param name="host" value="irc.fxnet.org">
-      <param name="port" value="443">
-      <param name="gui" value="pixx">
-      <param name="language" value="english">
-      <param name="websocket" value="true">
-      <param name="autoconnection" value="true">
-    </applet>
+  <div class="chat-container" id="container">
+    <!-- CheerpJ will render the AWT GUI here -->
   </div>
   <div id="status">Loading CheerpJ...</div>
   <script>
@@ -57,6 +44,7 @@
 
     cheerpjInit({
       enableDebug: true,
+      clipboardMode: "permission",
       natives: {
 
         // WebSocketSocket.nativeConnect(int wsId, String host, int port)
@@ -173,6 +161,32 @@
             delete wsState[wsId];
           }
         }
+      }
+    }).then(async () => {
+      document.getElementById("status").textContent = "CheerpJ loaded. Starting PJIRC...";
+
+      // Set CheerpJ's working directory to /app/ so LocalFileHandler
+      // can find english.lng and other files served alongside pjirc.jar
+      const System = await cjCall("java.lang.System", "setProperty", "user.dir", "/app");
+
+      // ---- Configuration ----
+      // Edit these values to change the IRC server, nick, etc.
+      const NICK     = "PJIRCWebUser";
+      const FULLNAME = "PJIRC Web User";
+      const HOST     = "irc.fxnet.org";
+      const PORT     = "443";
+      const GUI      = "pixx";
+      // -----------------------
+
+      try {
+        await cheerpjRunMain(
+          "irc.IRCApplication",
+          "/app/pjirc.jar",
+          ["-p", NICK, FULLNAME, HOST, PORT, GUI, "-ws"]
+        );
+      } catch(e) {
+        console.error("[PJIRC] Launch error:", e);
+        document.getElementById("status").textContent = "Error: " + e;
       }
     });
   </script>

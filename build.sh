@@ -24,8 +24,7 @@ EXCLUDE_PATTERN="SpecificMS"
 # JDK 23+ removed java.applet (JEP 471) — exclude applet-dependent sources
 if [[ "$JDK_VERSION" -ge 23 ]]; then
   echo "JDK >= 23 detected: excluding applet classes (java.applet removed by JEP 471)"
-  echo "  Desktop mode (pjirc.sh / IRCApplication) will work fine."
-  echo "  Browser/CheerpJ mode requires building with JDK 17-22."
+  echo "  Desktop and browser/CheerpJ modes both work via IRCApplication.main()."
   EXCLUDE_PATTERN="SpecificMS\|IRCApplet\|AppletFileHandler\|AppletImageLoader\|AppletSoundHandler\|AppletURLHandler"
 fi
 

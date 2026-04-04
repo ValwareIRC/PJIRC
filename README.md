@@ -20,9 +20,9 @@ This compiles all sources and produces `run/pjirc.jar`.
 | JDK Version | Desktop mode | Browser/CheerpJ mode |
 |-------------|-------------|----------------------|
 | 8–22        | Full support | Full support |
-| 23+         | Full support | Not available* |
+| 23+         | Full support | Full support |
 
-\* JDK 23 removed `java.applet` ([JEP 471](https://openjdk.org/jeps/471)). The build script automatically detects this and excludes applet-related classes. Desktop mode (`pjirc.sh` / `IRCApplication`) works perfectly on any JDK version. To build for browser/CheerpJ use, build with JDK 17–22.
+JDK 23 removed `java.applet` ([JEP 471](https://openjdk.org/jeps/471)). The build script automatically detects this and excludes the legacy applet-related classes. Both desktop and browser/CheerpJ modes work on all JDK versions — the browser path uses `cheerpjRunMain()` via `IRCApplication.main()` instead of the Applet API.
 
 ## Running
 
@@ -76,27 +76,27 @@ PJIRC was originally a Java applet for embedding IRC in web pages. While browser
 
 ### How it works
 
-- **CheerpJ 4.2** runs the PJIRC Java applet inside the browser
-- The `websocket=true` applet parameter activates WebSocket transport
+- **CheerpJ 4.2** runs `IRCApplication.main()` inside the browser via `cheerpjRunMain()`
+- The `-ws` flag activates WebSocket transport
 - Instead of raw TCP sockets (blocked by browsers), PJIRC connects via `wss://` to the IRC server
 - JavaScript native method implementations bridge browser's `WebSocket` API into Java's `InputStream`/`OutputStream`
+- No `java.applet.Applet` dependency — works with JARs built on any JDK version
 
-### Configuring the applet
+### Configuring the web client
 
-Edit `chat.html` to change the server, nickname, and other settings via `<param>` tags:
+Edit the configuration section in `chat.html`:
 
-```html
-<applet archive="pjirc.jar" code="IRCApplet" width="900" height="600">
-  <param name="nick" value="PJIRCWebUser">
-  <param name="host" value="irc.unrealircd.org">
-  <param name="port" value="443">
-  <param name="gui" value="pixx">
-  <param name="language" value="english">
-  <param name="websocket" value="true">
-</applet>
+```js
+// ---- Configuration ----
+const NICK     = "PJIRCWebUser";
+const FULLNAME = "PJIRC Web User";
+const HOST     = "irc.unrealircd.org";
+const PORT     = "443";
+const GUI      = "pixx";
+// -----------------------
 ```
 
-The `websocket` parameter is the key addition — it tells PJIRC to use `wss://` WebSocket connections instead of raw TCP.
+These values are passed to `IRCApplication.main()` via the `-p` flag with `-ws` for WebSocket transport.
 
 ### Requirements
 
@@ -105,34 +105,7 @@ The `websocket` parameter is the key addition — it tells PJIRC to use `wss://`
 
 ### Legacy applet mode
 
-For archival reference, the original raw-TCP applet mode no longer works in any modern browser. The `websocket=true` parameter is what makes PJIRC viable as a web client again.
-
-### Applet Parameters
-
-All configuration options from `pjirc.cfg` can also be passed as applet `<param>` tags:
-
-| Parameter                      | Description                                  |
-| ------------------------------ | -------------------------------------------- |
-| `nick`                         | IRC nickname                                 |
-| `fullname`                     | Full name / real name                        |
-| `host`                         | IRC server hostname                          |
-| `port`                         | IRC server port (default: 6667)              |
-| `gui`                          | GUI theme: `pixx`, `pgl`, or `sdk`           |
-| `language`                     | Language file name (without `.lng`)           |
-| `websocket`                    | Use WebSocket transport (`true`/`false`)     |
-| `command1`, `command2`, ...    | Auto-run commands (e.g. `/join #channel`)    |
-| `style:backgroundcolor`       | Background color (integer RGB)               |
-| `style:foregroundcolor`        | Text color (integer RGB)                     |
-
-### JavaScript API
-
-When running as an applet (in legacy browsers), PJIRC exposes methods callable from JavaScript:
-
-- `sendString(text)` — Send text to the current channel/query
-- `sendString(server, type, name, cmd)` — Send command to a specific source
-- `setFieldText(text)` / `getFieldText()` — Control the input field
-- `validateText()` — Submit the current input (like pressing Enter)
-- `requestSourceFocus()` — Focus the active IRC source
+The original `IRCApplet` class (extending `java.applet.Applet`) is still included for historical reference and compiles on JDK 8–22. On JDK 23+, the applet classes are automatically excluded by the build script since `java.applet` was removed. The modern browser path uses `cheerpjRunMain()` with `IRCApplication.main()` and does not depend on the Applet API.
 
 ## Configuration
 

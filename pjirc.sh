@@ -12,6 +12,7 @@
 #
 # Optional:
 #   -t            Enable TLS/SSL (use for port 6697)
+#   -w            Enable WebSocket transport
 #   -g GUI        GUI theme: pixx, pgl, sdk (default: pixx)
 #   -f FILE       Use a config file instead of -n/-s/-p
 #   -h            Show this help
@@ -30,8 +31,9 @@ PORT=""
 GUI=""
 CFGFILE=""
 TLS=0
+WS=0
 
-while getopts "n:s:p:g:f:th" opt; do
+while getopts "n:s:p:g:f:twh" opt; do
   case "$opt" in
     n) NICK="$OPTARG" ;;
     s) SERVER="$OPTARG" ;;
@@ -39,6 +41,7 @@ while getopts "n:s:p:g:f:th" opt; do
     g) GUI="$OPTARG" ;;
     f) CFGFILE="$OPTARG" ;;
     t) TLS=1 ;;
+    w) WS=1 ;;
     h) usage 0 ;;
     *) usage 1 ;;
   esac
@@ -63,6 +66,9 @@ else
   ARGS=(-jar pjirc.jar -p "$NICK" "$FULLNAME" "$SERVER" "$PORT" "$GUI")
   if [[ "$TLS" -eq 1 ]]; then
     ARGS+=(-ssl)
+  fi
+  if [[ "$WS" -eq 1 ]]; then
+    ARGS+=(-ws)
   fi
   exec java "${ARGS[@]}"
 fi

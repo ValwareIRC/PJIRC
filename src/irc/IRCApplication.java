@@ -696,7 +696,10 @@ public class IRCApplication extends IRCObject implements ServerListener,ServerMa
   {
     System.out.println("Usage :");
     System.out.println("   java irc.IRCApplication -f configfile");
-    System.out.println("or java irc.IRCApplication -p nick fullname host port gui [-ssl]");
+    System.out.println("or java irc.IRCApplication -p nick fullname host port gui [-ssl] [-ws]");
+    System.out.println("");
+    System.out.println("  -ssl    Enable TLS/SSL");
+    System.out.println("  -ws     Enable WebSocket transport (for browser/CheerpJ usage)");
     System.out.println("");
     System.out.println("Without any parameter, '-f pjirc.cfg' parameters are assumed.");
   }
@@ -730,10 +733,13 @@ public class IRCApplication extends IRCObject implements ServerListener,ServerMa
         ircConfiguration=loader.loadIRCConfiguration();
         ircConfiguration.set("gui",args[5]);
         int port=new Integer(args[4]).intValue();
-        // Check for -ssl flag
-        if(args.length>=7 && args[6].equals("-ssl"))
+        // Check for optional trailing flags (-ssl, -ws) in any order
+        for(int i=6;i<args.length;i++)
         {
-          irc.security.DefaultSecuredProvider.useTLS=true;
+          if(args[i].equals("-ssl"))
+            irc.security.DefaultSecuredProvider.useTLS=true;
+          else if(args[i].equals("-ws"))
+            irc.security.DefaultSecuredProvider.useWebSocket=true;
         }
         startupConfiguration=new StartupConfiguration(args[1],"",args[2],new String[] {""},new String[] {args[3]},new int[] {port},"",new String[] {},new String[] {});
       }
