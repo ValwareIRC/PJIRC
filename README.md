@@ -18,8 +18,8 @@ This compiles all sources and produces `run/pjirc.jar`.
 ## Running
 
 ```bash
-cd run
-java -jar pjirc.jar
+chmod +x build.sh
+./pjirc.sh -n Nick123 -s irc.libera.chat -p 6697 -t
 ```
 
 By default it reads `pjirc.cfg` from the working directory. Edit `run/pjirc.cfg` to set your nickname, server, and other options.
@@ -27,13 +27,24 @@ By default it reads `pjirc.cfg` from the working directory. Edit `run/pjirc.cfg`
 ### Command-line options
 
 ```
-# Config file mode (default: pjirc.cfg)
-java -jar pjirc.jar -f <config-file>
+./pjirc.sh -n <nick> -s <server> -p <port> [-t] [-g <gui>]
+./pjirc.sh -f <config-file>
 
-# Direct parameters mode
-java -jar pjirc.jar -p <nick> <fullname> <server> <gui>
-# Example: java -jar pjirc.jar -p MyNick "My Name" irc.libera.chat pixx
+# Examples:
+./pjirc.sh -n MyNick -s irc.libera.chat -p 6667
+./pjirc.sh -n MyNick -s irc.example.com -p 6697 -t
+./pjirc.sh -f run/pjirc.cfg
 ```
+
+| Flag | Description |
+|------|-------------|
+| `-n NICK` | IRC nickname (required) |
+| `-s SERVER` | IRC server hostname (required) |
+| `-p PORT` | IRC server port (required) |
+| `-t` | Enable TLS/SSL (use for port 6697) |
+| `-g GUI` | GUI theme: `pixx`, `pgl`, `sdk` (default: pixx) |
+| `-f FILE` | Use a config file instead of flags |
+| `-h` | Show help |
 
 ### GUI themes
 
