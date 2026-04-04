@@ -88,6 +88,38 @@ public class AWTIrcTextField extends Container implements ActionListener,KeyList
    
   }
 
+  public Dimension getPreferredSize()
+  {
+    Dimension d=super.getPreferredSize();
+    FontMetrics fm=getFontMetrics(_field.getFont());
+    if(fm!=null)
+    {
+      int h=fm.getHeight()+10;
+      if(d.height<h) d.height=h;
+    }
+    else if(d.height<24)
+    {
+      d.height=24;
+    }
+    return d;
+  }
+
+  public Dimension getMinimumSize()
+  {
+    Dimension d=super.getMinimumSize();
+    FontMetrics fm=getFontMetrics(_field.getFont());
+    if(fm!=null)
+    {
+      int h=fm.getHeight()+10;
+      if(d.height<h) d.height=h;
+    }
+    else if(d.height<24)
+    {
+      d.height=24;
+    }
+    return d;
+  }
+
   /**
    * Release this object.
    */

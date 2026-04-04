@@ -6,7 +6,7 @@ This is a source restoration from the [SourceForge CVS repository](https://sourc
 
 ## Building
 
-Requires Java 8+ (tested on OpenJDK 17).
+Requires **JDK 8+** (tested on OpenJDK 17).
 
 ```bash
 chmod +x build.sh
@@ -14,6 +14,15 @@ chmod +x build.sh
 ```
 
 This compiles all sources and produces `run/pjirc.jar`.
+
+### JDK compatibility notes
+
+| JDK Version | Desktop mode | Browser/CheerpJ mode |
+|-------------|-------------|----------------------|
+| 8–22        | Full support | Full support |
+| 23+         | Full support | Not available* |
+
+\* JDK 23 removed `java.applet` ([JEP 471](https://openjdk.org/jeps/471)). The build script automatically detects this and excludes applet-related classes. Desktop mode (`pjirc.sh` / `IRCApplication`) works perfectly on any JDK version. To build for browser/CheerpJ use, build with JDK 17–22.
 
 ## Running
 

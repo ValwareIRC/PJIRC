@@ -206,6 +206,10 @@ public interface IRCTextProvider
    * This software is licensed under the GPL license
    */
   public static final int ABOUT_GPL=0x406;
+  /**
+   * Revived by: Valware
+   */
+  public static final int ABOUT_REVIVED_BY=0x407;
 
   /**
    * Unable to connect : %1

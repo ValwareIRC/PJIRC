@@ -527,7 +527,7 @@ public class IRCServer extends IRCObject implements Server, ServerProtocolListen
     if(_passWord[_tryServerIndex].length()>0) execute("pass "+_passWord[_tryServerIndex]);
     execute("nick "+ans);
     String name=_ircConfiguration.getS("userid");
-    if(name.length()==0) name=ans;
+    if(name.length()==0) name="pjirc";
     if(!_registered)
     {
       _registered=true;
