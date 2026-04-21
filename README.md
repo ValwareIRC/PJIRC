@@ -1,4 +1,4 @@
-# PJIRC — Plouf's Java IRC Client
+# PJIRC — Plouf's Java IRC Client (RESTORED AND WORKING)
 
 A full-featured Java-based IRC client, originally created by Philippe Detournay (2002–2005).
 
